@@ -12,8 +12,8 @@
   [![Groq AI](https://img.shields.io/badge/Powered_by-Groq_AI-f55036?style=for-the-badge)](https://groq.com/)
   [![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-  <!-- 🔴 REPLACE: Add your live demo URL below, or delete this line if not deployed yet -->
-  <!-- [![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-blueviolet?style=for-the-badge)](https://your-live-demo-url.com) -->
+  
+  [![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-blueviolet?style=for-the-badge)](https://gyan-manthan-one.vercel.app/) 
 
 </div>
 
