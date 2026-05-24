@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Gyan Manthan Logo" width="600"  style="border-radius: 20px;" />  
+  <img src="assets/logo.png" alt="Gyan Manthan Logo" width="250" style="border-radius: 20px;" />
   
   # Gyan Manthan
   *Churn Wisdom from Every Page.*
@@ -12,8 +12,11 @@
   [![Groq AI](https://img.shields.io/badge/Powered_by-Groq_AI-f55036?style=for-the-badge)](https://groq.com/)
   [![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-  <!-- 🔴 REPLACE: Add your live demo URL below, or delete this line if not deployed yet -->
-  <!-- [![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-blueviolet?style=for-the-badge)](https://your-live-demo-url.com) -->
+  <br/>
+
+  ### 🚀 [Click here for Live Demo](https://gyan-manthan-one.vercel.app/)
+  
+  [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-blueviolet?style=for-the-badge)](https://gyan-manthan-one.vercel.app/)
 
 </div>
 
@@ -36,8 +39,7 @@
 
 ## 📸 Sneak Peek
 
-<img src="assets/screenshot.png" alt="Gyan Manthan Dashboard" width="100%" style="border-radius: 12px;" /> 
-
+<img src="assets/screenshot.png" alt="Gyan Manthan Dashboard" width="100%" style="border-radius: 12px;" />
 
 ---
 
@@ -68,7 +70,7 @@ cd server
 npm install
 ```
 
-Create a `.env` file in the `/server` directory (use `.env.example` as reference):
+Create a `.env` file in the `/server` directory:
 
 ```env
 PORT=5000
@@ -100,7 +102,7 @@ cd ../client
 npm install
 ```
 
-Create a `.env` file in the `/client` directory (use `.env.example` as reference):
+Create a `.env` file in the `/client` directory:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
@@ -149,15 +151,14 @@ Open your browser and navigate to `http://localhost:5173`
 
 ```
 Gyan-Manthan/
-├── assets/               # Static assets (logo, screenshots)
-├── client/               # React frontend (Vite)
+├── assets/                          # Static assets (logo, screenshots)
+├── client/                          # React frontend (Vite)
 │   ├── src/
-│   ├── .env              # ← Create this (see Client Setup)
-│   └── .env.example
-├── server/               # Express backend
-│   ├── .env              # ← Create this (see Server Setup)
-│   ├── .env.example
+│   └── .env                         # ← Create this (see Client Setup)
+├── server/                          # Express backend
+│   ├── .env                         # ← Create this (see Server Setup)
 │   └── firebaseServiceAccountKey.json  # ← Add this (never commit!)
+├── LICENSE
 ├── .gitignore
 └── README.md
 ```
