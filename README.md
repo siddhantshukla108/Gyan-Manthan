@@ -38,7 +38,6 @@
 
 <img src="assets/screenshot.png" alt="Gyan Manthan Dashboard" width="100%" style="border-radius: 12px;" /> 
 
-> 🚧 Screenshots coming soon!
 
 ---
 
