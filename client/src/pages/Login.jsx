@@ -8,7 +8,20 @@ import toast from 'react-hot-toast';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, signup, loginWithGoogle } = useAuth();
+  const { login, signup, loginWithGoogle, forgotPassword } = useAuth();
+
+  async function handleForgotPassword() {
+    if (!email) {
+      toast.error('Please enter your email address first.');
+      return;
+    }
+    try {
+      await forgotPassword(email);
+      toast.success('Password reset email sent! Check your inbox.');
+    } catch (err) {
+      toast.error('Failed to send reset email: ' + err.message);
+    }
+  }
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -63,7 +76,7 @@ export default function Login() {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label className="block text-sm font-semibold text-slate-700">Password</label>
-                <button type="button" onClick={() => toast("Forgot password flow not implemented yet.", { icon: 'ℹ️' })} className="text-xs font-semibold text-blue-600 hover:underline">Forgot Password?</button>
+                <button type="button" onClick={handleForgotPassword} className="text-xs font-semibold text-blue-600 hover:underline">Forgot Password?</button>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
