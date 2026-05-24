@@ -10,6 +10,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const { login, signup, loginWithGoogle, forgotPassword } = useAuth();
 
+  const navigate = useNavigate();
+
   async function handleForgotPassword() {
     if (!email) {
       toast.error('Please enter your email address first.');
@@ -22,7 +24,6 @@ export default function Login() {
       toast.error('Failed to send reset email: ' + err.message);
     }
   }
-  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
