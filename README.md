@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.png" alt="Gyan Manthan Logo" width="200" height="200" style="border-radius: 20px;" />
+  <!-- <img src="assets/logo.png" alt="Gyan Manthan Logo" width="200" height="200" style="border-radius: 20px;" /> -->
   
   # Gyan Manthan
   *Churn Wisdom from Every Page.*
