@@ -2,9 +2,14 @@ const admin = require('firebase-admin');
 const User = require('../models/User');
 
 // Initialize Firebase Admin SDK
-// CRITICAL: firebaseServiceAccountKey.json must exist in the server root
-// If missing, the server will intentionally crash to prevent silent auth failures
-const serviceAccount = require('../firebaseServiceAccountKey.json');
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} else {
+  // Fallback for local development
+  serviceAccount = require('../firebaseServiceAccountKey.json');
+}
+
 admin.initializeApp({ 
   credential: admin.credential.cert(serviceAccount)
 });
