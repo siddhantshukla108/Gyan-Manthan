@@ -11,7 +11,12 @@
   [![MongoDB](https://img.shields.io/badge/MongoDB-8.9.0-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
   [![Groq AI](https://img.shields.io/badge/Powered_by-Groq_AI-f55036?style=for-the-badge)](https://groq.com/)
   [![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-  [![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-blueviolet?style=for-the-badge)](https://gyan-manthan-one.vercel.app/)
+
+  <br/>
+
+  ### 🚀 [Click here for Live Demo](https://gyan-manthan-one.vercel.app/)
+  
+  [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Visit_Site-blueviolet?style=for-the-badge)](https://gyan-manthan-one.vercel.app/)
 
 </div>
 
