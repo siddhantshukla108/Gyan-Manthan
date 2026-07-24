@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '../api/axios';
-import { BookOpen, CheckCircle, ChevronRight, ChevronLeft, Loader2, Sparkles, Target, Lightbulb, X, BookMarked, ArrowLeft } from 'lucide-react';
+import { BookOpen, CheckCircle, ChevronRight, ChevronLeft, Loader2, Sparkles, Target, Lightbulb, X, BookMarked, ArrowLeft, FileText } from 'lucide-react';
 import AnalysisModal from '../components/AnalysisModal';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -13,6 +14,7 @@ export default function SessionReader() {
   const [sessions, setSessions] = useState([]);
   const [currentDay, setCurrentDay] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [generatingNotes, setGeneratingNotes] = useState(false);
   const navigate = useNavigate();
 
   // Highlight state
@@ -112,6 +114,20 @@ export default function SessionReader() {
     } catch (err) {
       console.error(err);
       toast.error('Failed to update session status');
+    }
+  };
+
+  const handleGenerateNotes = async () => {
+    setGeneratingNotes(true);
+    try {
+      const response = await axios.post(`/sessions/${currentSession._id}/notes`);
+      setSessions(sessions.map(s => s._id === currentSession._id ? { ...s, readingNotes: response.data.notes } : s));
+      toast.success('Reading notes generated successfully!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to generate reading notes');
+    } finally {
+      setGeneratingNotes(false);
     }
   };
 
@@ -215,6 +231,41 @@ export default function SessionReader() {
                   </p>
                 </motion.div>
               </div>
+
+              {/* Detailed Reading Notes */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+                className="glass-panel p-8 md:p-12 rounded-[2rem] relative overflow-hidden group hover:shadow-2xl transition-all duration-300"
+              >
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-emerald-500"></div>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="p-3 bg-slate-100 rounded-xl group-hover:bg-blue-50 transition-colors">
+                    <FileText className="text-blue-600 w-6 h-6" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-800">Detailed Reading Notes</h3>
+                </div>
+                
+                {currentSession.readingNotes ? (
+                  <div className="prose prose-slate prose-lg md:prose-xl max-w-none prose-headings:text-slate-800 prose-a:text-blue-600">
+                    <ReactMarkdown>{currentSession.readingNotes}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
+                    <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                      <Sparkles className="w-8 h-8 text-blue-500" />
+                    </div>
+                    <h4 className="text-xl font-bold text-slate-800 mb-2">Ready to dive deep?</h4>
+                    <p className="text-slate-500 mb-8 max-w-md">Generate a comprehensive, fully detailed reading summary for today's assignment, powered by AI.</p>
+                    <button 
+                      onClick={handleGenerateNotes}
+                      disabled={generatingNotes}
+                      className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {generatingNotes ? <><Loader2 className="w-5 h-5 animate-spin" /> Generating Notes...</> : <><Sparkles className="w-5 h-5" /> Generate Reading Notes</>}
+                    </button>
+                  </div>
+                )}
+              </motion.div>
 
               {/* Summary Card */}
               <motion.div 

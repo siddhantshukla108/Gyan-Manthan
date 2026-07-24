@@ -9,6 +9,7 @@ const sessionSchema = new mongoose.Schema({
   metaphor: { type: String },
   implementationTask: { type: String },
   reflectionQuestion: { type: String },
+  readingNotes: { type: String }, // Detailed AI generated reading material
   completed: { type: Boolean, default: false }
 }, { timestamps: true });
 

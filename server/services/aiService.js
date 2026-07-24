@@ -39,7 +39,7 @@ function extractJSON(text) {
 /**
  * Execute chat completion with model fallback mechanism
  */
-async function generateCompletion(prompt, maxTokens = 3000) {
+async function generateCompletion(prompt, maxTokens = 3000, forceJson = true) {
   if (!OPENROUTER_API_KEY) throw new Error('OPENROUTER_API_KEY is missing in env');
 
   let lastError = null;
@@ -47,13 +47,19 @@ async function generateCompletion(prompt, maxTokens = 3000) {
   for (const model of models) {
     try {
       console.log(`Trying model: ${model}`);
+      
+      const payload = {
+        model: model,
+        messages: [{ role: 'user', content: prompt }]
+      };
+      
+      if (forceJson) {
+        payload.response_format = { type: 'json_object' };
+      }
+
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
-        {
-          model: model,
-          messages: [{ role: 'user', content: prompt }],
-          response_format: { type: 'json_object' }
-        },
+        payload,
         {
           headers: {
             'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
@@ -61,12 +67,12 @@ async function generateCompletion(prompt, maxTokens = 3000) {
             'HTTP-Referer': process.env.CLIENT_URL || 'http://localhost:5173', 
             'X-Title': 'Gyan-Manthan'
           },
-          timeout: 30000 // 30 sec timeout
+          timeout: 45000 // 45 sec timeout to allow for longer generations
         }
       );
 
       const content = response.data.choices[0].message.content;
-      return extractJSON(content);
+      return forceJson ? extractJSON(content) : content;
     } catch (error) {
       console.warn(`Model ${model} failed:`, error?.response?.data || error.message);
       lastError = error;
@@ -116,5 +122,19 @@ Please provide a JSON response with the following structure:
 }
 Ensure valid JSON output. Escape quotes inside string values.`;
 
-  return await generateCompletion(prompt, 1500);
+  return await generateCompletion(prompt, 1500, true);
+};
+
+exports.generateReadingNotes = async (bookTitle, bookAuthor, language, sessionContent) => {
+  const prompt = `You are an expert scholar and tutor. A user is studying the book "${bookTitle}" by ${bookAuthor}.
+Today's reading assignment is: "${sessionContent}".
+
+Please generate a highly detailed, comprehensive set of reading notes for this specific assignment.
+IMPORTANT RULES:
+1. MUST be written entirely in ${language}.
+2. MUST use Markdown formatting (headings, bullet points, bold text).
+3. The notes must contain key words, important points, and a deep summary so that someone reading this will know everything important about this section of the book.
+4. Do NOT output JSON. Just output the Markdown text directly.`;
+
+  return await generateCompletion(prompt, 4000, false);
 };
