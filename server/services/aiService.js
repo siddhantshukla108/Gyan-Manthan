@@ -3,9 +3,12 @@ const axios = require('axios');
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 const models = [
-  'poolside/laguna-s-2.1:free',
-  'google/gemma-4-26b-a4b-it:free',
-  'google/gemma-4-31b-it:free'
+  'openai/gpt-oss-20b:free', // 20B params, perfect balance of speed and intelligence
+  'nvidia/nemotron-nano-9b-v2:free', // 9B params, extremely fast backup
+  'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', // 30B params
+  'poolside/laguna-s-2.1:free', // Backup
+  'google/gemma-4-26b-a4b-it:free', // Backup
+  'google/gemma-4-31b-it:free' // Slower backup
 ];
 
 /**
@@ -86,9 +89,19 @@ async function generateCompletion(prompt, maxTokens = 3000, forceJson = true) {
 exports.generateReadingPlan = async (book, options) => {
   const { durationDays, readingMode, language } = options;
   
-  const prompt = `You are Gyan Manthan AI. Create a ${durationDays}-day reading plan for "${book.title}" by "${book.author}".
+  const prompt = `You are Gyan Manthan AI, an expert syllabus creator. Create a ${durationDays}-day reading plan for the book "${book.title}" by "${book.author}".
 Mode: "${readingMode}". Output language: "${language}".
-IMPORTANT: Write text in the native script of ${language}. Do NOT use English script for non-English languages. Keep sentences very concise to save tokens.
+
+STRICT PACING RULES based on duration (${durationDays} days):
+- If 7 days: Group massive chunks of the book (e.g. 3-5 chapters) per day. Move very fast.
+- If 15 days: Group moderate chunks (1-2 chapters) per day.
+- If 30 days: Micro-chunks. Assign only a few pages, a single subchapter, or one core concept per day.
+
+STRICT FOCUS RULES based on mode ("${readingMode}"):
+- If "Fast": Focus on high-level plot/concepts. Make 'summary' and 'keyIdea' extremely brief and actionable.
+- If "Deep Study" or "Study": Focus on deep philosophical themes, metaphors, and historical context. Make 'metaphor' and 'reflectionQuestion' profound.
+
+IMPORTANT: Write all textual output in the native script of ${language}. Do NOT use English script for non-English languages. Keep sentences very concise to save tokens.
 Escape quotes inside string values.
 
 Please respond ONLY in valid JSON format. The root object MUST contain a key "sessions" which is an array of exactly ${durationDays} session objects.
@@ -97,7 +110,7 @@ Format:
   "sessions": [
     {
       "dayNumber": 1,
-      "content": "What to read today",
+      "content": "Specific chapters/pages to read today",
       "summary": "Summary in ${language}",
       "keyIdea": "Core idea in ${language}",
       "metaphor": "Metaphor analysis in ${language}",
@@ -125,16 +138,20 @@ Ensure valid JSON output. Escape quotes inside string values.`;
   return await generateCompletion(prompt, 1500, true);
 };
 
-exports.generateReadingNotes = async (bookTitle, bookAuthor, language, sessionContent) => {
+exports.generateReadingNotes = async (bookTitle, bookAuthor, language, sessionContent, readingMode) => {
   const prompt = `You are an expert scholar and tutor. A user is studying the book "${bookTitle}" by ${bookAuthor}.
 Today's reading assignment is: "${sessionContent}".
+The user's chosen reading mode is: "${readingMode}".
 
 Please generate a highly detailed, comprehensive set of reading notes for this specific assignment.
 IMPORTANT RULES:
 1. MUST be written entirely in ${language}.
 2. MUST use Markdown formatting (headings, bullet points, bold text).
-3. The notes must contain key words, important points, and a deep summary so that someone reading this will know everything important about this section of the book.
-4. Do NOT output JSON. Just output the Markdown text directly.`;
+3. Do NOT output JSON. Just output the Markdown text directly.
+
+STRICT CONTENT RULES based on mode ("${readingMode}"):
+- If "Fast": Generate snappy, highly scannable bullet points. Focus purely on executive summaries and actionable takeaways. Skip heavy philosophical tangents.
+- If "Deep Study" or "Study": Generate long-form, essay-style notes. Dive deep into literary devices, historical context, underlying philosophy, and profound analysis of the text. Provide a rich intellectual experience.`;
 
   return await generateCompletion(prompt, 4000, false);
 };

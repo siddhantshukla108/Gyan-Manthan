@@ -61,7 +61,8 @@ router.post('/:sessionId/notes', verifyToken, async (req, res) => {
       session.plan.book.title,
       session.plan.book.author,
       session.plan.language,
-      session.content
+      session.content,
+      session.plan.readingMode
     );
 
     session.readingNotes = notes;
