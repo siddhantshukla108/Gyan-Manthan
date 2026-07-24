@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const sessionSchema = new mongoose.Schema({
-  plan: { type: mongoose.Schema.Types.ObjectId, ref: 'ReadingPlan', required: true },
+  plan: { type: mongoose.Schema.Types.ObjectId, ref: 'ReadingPlan', required: true, index: true },
   dayNumber: { type: Number, required: true },
   content: { type: String }, // Raw or chunked text to read
   summary: { type: String }, // AI simplified summary

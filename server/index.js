@@ -1,13 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
 
 // Middleware
+app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173'
+  origin: [
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ].filter(Boolean) // filters out undefined if CLIENT_URL is missing
 }));
 app.use(express.json());
 
@@ -23,6 +29,15 @@ app.get('/', (req, res) => {
   res.send('Gyan Manthan API is running...');
 });
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled Error:', err.stack);
+  const status = err.status || 500;
+  res.status(status).json({
+    error: err.message || 'Internal Server Error'
+  });
+});
+
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
@@ -35,3 +50,4 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => {
     console.error('MongoDB connection error:', err);
   });
+
