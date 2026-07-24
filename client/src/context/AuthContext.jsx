@@ -39,16 +39,16 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      setLoading(false); // Unblock UI immediately!
+      
       if (user) {
-        try {
-          await axios.post('/auth/sync');
-        } catch (err) {
+        // Sync user to database in background
+        axios.post('/auth/sync').catch(err => {
           console.error('Error syncing user:', err);
-        }
+        });
       }
-      setLoading(false);
     });
 
     return unsubscribe;
